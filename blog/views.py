@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
-from .forms import EmailPostForm
-from .models import Post
+from .forms import EmailPostForm, CommentForm
+from .models import Post, Comment
 
 # Python views is just a python function that recive a web request and returns a web response
 # Then you have to define the URL for your view
@@ -35,7 +35,31 @@ def post_detail(request, year, month, day, post):
                                    publish__year=year,
                                    publish__month=month,
                                    publish__day=day)
-    return render(request, 'blog/post/detail.html', {'post': post} )
+
+    #List of active comments for this post
+    comments = post.comments.filter(active = True)
+
+    new_comment = None
+    comment_form = None
+    if request.method == 'POST':
+        # A comment was posted, contains the submitted data
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            #Create Comment object but don't save yet
+            new_comment = comment_form.save(commit=False)
+            #Assign the current post to the comment
+            new_comment.post = post
+            #Save into the database
+            new_comment.save()
+        else:
+            # Se manda a llamar por GET, mostramos vacio
+            comment_form = CommentForm()
+    return render(request,
+                  'blog/post/detail.html',
+                  {'post': post,
+                   'comments': comments,
+                   'new_comment': new_comment,
+                   'comment_form': comment_form} )
 
 def post_share(request, post_id):
     # Retrieve post by id
