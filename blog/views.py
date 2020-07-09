@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from .forms import EmailPostForm, CommentForm
 from .models import Post, Comment
 from taggit.models import Tag
+from django.db.models import Count
 
 # Python views is just a python function that recive a web request and returns a web response
 # Then you have to define the URL for your view
@@ -61,12 +62,19 @@ def post_detail(request, year, month, day, post):
         else:
             # Se manda a llamar por GET, mostramos vacio
             comment_form = CommentForm()
+    # List of similar posts
+    # The flag flat=True retrives the value as a single number and not as a tuple
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-publish')[:4]
+
     return render(request,
                   'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
                    'new_comment': new_comment,
-                   'comment_form': comment_form} )
+                   'comment_form': comment_form, 
+                   'similar_posts': similar_posts})
 
 def post_share(request, post_id):
     # Retrieve post by id
