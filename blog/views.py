@@ -4,11 +4,18 @@ from django.views.generic import ListView
 from django.core.mail import send_mail
 from .forms import EmailPostForm, CommentForm
 from .models import Post, Comment
+from taggit.models import Tag
 
 # Python views is just a python function that recive a web request and returns a web response
 # Then you have to define the URL for your view
-def post_list(request):
+def post_list(request, tag_slug=None):
     object_list = Post.published.all()
+    tag = None
+    
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
+    
     paginator = Paginator(object_list, 3)
     page = request.GET.get('page')
     try:
@@ -20,7 +27,7 @@ def post_list(request):
         # If page is out of range deliver last page of results
         posts = paginator.page(paginator.num_pages)
     # posts = Post.objects.all()
-    return render(request, 'blog/post/list.html', {'page':page, 'posts':posts})
+    return render(request, 'blog/post/list.html', {'page':page, 'posts':posts, 'tag':tag})
 
 # Create your views here.
 class PostListView(ListView):
