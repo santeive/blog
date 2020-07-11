@@ -3,12 +3,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from .forms import EmailPostForm, CommentForm
+from django.db.models import Count
 from .models import Post, Comment
 from taggit.models import Tag
-from django.db.models import Count
+from django.http import HttpResponse
 
-# Python views is just a python function that recive a web request and returns a web response
-# Then you have to define the URL for your view
+def hello(request, name):
+    hello = "<p>Hola: " + "<strong>" + name + "</strong>"+ "</p>"
+    return HttpResponse(hello)
+
 def post_list(request, tag_slug=None):
     object_list = Post.published.all()
     tag = None
@@ -27,7 +30,6 @@ def post_list(request, tag_slug=None):
     except EmptyPage:
         # If page is out of range deliver last page of results
         posts = paginator.page(paginator.num_pages)
-    # posts = Post.objects.all()
     return render(request, 'blog/post/list.html', {'page':page, 'posts':posts, 'tag':tag})
 
 # Create your views here.

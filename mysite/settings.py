@@ -32,13 +32,18 @@ ALLOWED_HOSTS = []
 # pass: admin1234
 
 INSTALLED_APPS = [
+    #Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #Local Apps
     'blog.apps.BlogConfig',
+
+    #Third-party
     'taggit',
 ]
 
