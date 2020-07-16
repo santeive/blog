@@ -2,10 +2,4 @@ Este es un archivo de prueba version Uno
 
 Ahora vamos a agregar nuevas lineas al archivo
 
-<<<<<<< HEAD
-Esta es el tercer commit que hacemos, para ver las diferencias
-
-Aqui vamos a agregar la cuarta y utlima linea para ver el ejemplo
-=======
-Esta es el tercer commit que hacemos, para ver las diferencias
->>>>>>> 5f83eeca3e9c6917519a386a872fcdfe9d5d1a98
+We added our new key
