@@ -93,7 +93,7 @@ def post_share(request, post_id):
             message = f"Read {post.title} at {post_url}\n\n" \
                       f"{cd['name']}\'s comments: {cd['comments']}"
             # Change to your email
-            send_mail(subject, message, 'youraccount@gmail.com', [cd['to']] )
+            send_mail(subject, message, 'youremail@gmail.com', [cd['to']] )
             sent = True
     else:
         form = EmailPostForm()
