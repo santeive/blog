@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # user: admin
 # pass: admin1234
 
+SITE_ID = 1
+
 INSTALLED_APPS = [
     #Django apps
     'django.contrib.admin',
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     #Local Apps
     'blog.apps.BlogConfig',
